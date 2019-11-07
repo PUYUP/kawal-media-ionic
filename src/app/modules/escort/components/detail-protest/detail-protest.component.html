@@ -1,0 +1,84 @@
+<ion-spinner *ngIf="isLoading"></ion-spinner>
+
+<section *ngIf="!isLoading && !protestData">
+  <p>
+    <ion-text color="danger">Sanggahan tidak ditemukan.</ion-text>
+  </p>
+</section>
+
+<section *ngIf="!isLoading && protestData"> 
+  <div *ngIf="protestData.ownership">
+    <ion-badge *ngIf="protestData.status == 1" color="warning">{{ protestData.status_label }}</ion-badge>
+    <ion-badge *ngIf="protestData.status == 2" color="light">{{ protestData.status_label }}</ion-badge>
+    <ion-badge *ngIf="protestData.status == 3" color="success">{{ protestData.status_label }}</ion-badge>
+    <ion-badge *ngIf="protestData.status == 4" color="secondary">{{ protestData.status_label }}</ion-badge>
+    <ion-badge *ngIf="protestData.status == 5" color="secondary">{{ protestData.status_label }}</ion-badge>
+    <ion-badge *ngIf="protestData.status == 6" color="medium">{{ protestData.status_label }}</ion-badge>
+  </div>
+
+  <h5 class="ion-no-margin ion-margin-top" [ngStyle]="{'margin-bottom': '5px'}">{{ protestData.label }}</h5>
+
+  <p class="ion-no-margin ion-margin-bottom">
+    Media: 
+    {{ protestData.media_label }}
+  </p>
+
+  <ion-item class="ion-no-padding ion-margin-bottom">
+    <ion-avatar slot="start">
+      <img src="{{ protestData.avatar ? protestData.avatar : 'assets/images/NoImage.png' }}">
+    </ion-avatar>
+
+    <ion-label class="ion-text-wrap">
+      <ion-text *ngIf="protestData.label">
+        <h4>
+          <strong class="ion-text-capitalize">{{ protestData.protester }}</strong>
+        </h4>
+      </ion-text>
+
+      <ion-text color="dark">
+        <p>
+          {{ protestData.date_updated | date: 'short' }}
+        </p>
+      </ion-text>
+    </ion-label>
+
+    <ion-button *ngIf="protestData.ownership && protestData.status == 6" color="danger" slot="end" (tap)="deleteItem(protestData)" class="ion-no-margin">
+      <ion-icon name="trash" slot="icon-only"></ion-icon>
+    </ion-button>
+
+    <ion-button *ngIf="protestData.ownership" [routerLink]="['/media', media_uuid, 'protest', protest_uuid, 'edit']" routerDirection="forward" slot="end" class="ion-no-margin ion-margin-start">
+      <ion-icon name="create" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-grid class="ion-no-padding ion-no-margin ion-margin-bottom">
+    <ion-row>
+      <ion-col size="12" class="ion-no-padding ion-no-margin">
+        <article *ngIf="protestData.description" [innerHTML]="content" class="ck-content"></article>
+      </ion-col>
+
+      <ion-col size="12" class="ion-no-padding ion-no-margin">
+        <ion-item-divider></ion-item-divider>
+      </ion-col>
+
+      <ion-col size="7" class="ion-no-padding ion-no-margin ion-margin-top">
+        <ion-button type="button" color="light" (tap)="performThumb(protestData, 1)" size="small" class="ion-margin-end" disabled="{{ protestData.thumbing == true ? 'true' : 'false' }}">
+          <ion-icon name="thumbs-up"></ion-icon>
+          &nbsp; {{ protestData.thumbsup_count}}
+        </ion-button>
+
+        <ion-button type="button" color="light" (tap)="performThumb(protestData, 0)" size="small" disabled="{{ protestData.thumbing == false ? 'true' : 'false' }}">
+          <ion-icon name="thumbs-down"></ion-icon>
+          &nbsp; {{ protestData.thumbsdown_count}}
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="5" class="ion-no-padding ion-no-margin ion-margin-top ion-text-right">
+        <ion-button color="light" size="small" (tap)="addComment(protestData)">
+          <ion-icon name="chatbubbles"></ion-icon>
+          &nbsp; {{ protestData.comment_count ? protestData.comment_count : 'Komentari' }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</section>

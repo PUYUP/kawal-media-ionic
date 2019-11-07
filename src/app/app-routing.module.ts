@@ -11,10 +11,12 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
+  // NOT FOUND
   {
-    path: 'list',
-    loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
-  }
+    path: '**', 
+    redirectTo: 'home'
+  },
+  { path: 'list-notification', loadChildren: './modules/notice/pages/list-notification/list-notification.module#ListNotificationPageModule' }
 ];
 
 @NgModule({

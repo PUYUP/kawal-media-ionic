@@ -1,0 +1,88 @@
+<ion-spinner *ngIf="isLoadingInit"></ion-spinner>
+
+<ion-grid class="ion-no-padding ion-margin-bottom">
+  <ion-row>
+    <ion-col size="{{ scope === 'public' || !personData ? '12' : '8' }}" class="ion-no-padding">
+      <ion-item *ngIf="!isLoadingInit" class="ion-no-padding">
+        <ion-input
+          type="search"
+          clear="true"
+          debounce="1000"
+          placeholder="Cari Media"
+          (ionChange)="searchMediaInput($event)">
+        </ion-input>
+
+        <ion-note *ngIf="isLoadingSearch" slot="end" class="ion-no-padding">
+          <ion-spinner name="dots"></ion-spinner>
+        </ion-note>
+      </ion-item>
+    </ion-col>
+
+    <ion-col *ngIf="scope === 'private' && personData" size="4" class="ion-no-padding">
+      <ion-item *ngIf="!isLoadingInit" class="ion-no-padding">
+        <ion-label>Pilih Status</ion-label>
+        <ion-select placeholder="Status"
+          class="ion-no-padding" 
+          interface="action-sheet"
+          [ngStyle]="{'width': '100%', 'max-width': 'none'}" 
+          (ionChange)="statusChange($event)"
+          value="{{ statusValue }}"
+          okText="Filter">
+          <ion-select-option *ngFor="let s of status" value="{{ s.status }}">
+            {{ s.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<section *ngIf="!isLoadingInit && medias && medias.count > 0">
+  <ion-grid class="ion-no-margin ion-no-padding">
+    <ion-row [ngStyle]="{'margin-left': '-3px', 'margin-right': '-3px'}">
+      <ion-col *ngFor="let item of listMedias" sizeXs="6" sizeSm="4" sizeMd="4" sizeLg="4" sizeXl="3">
+        <ion-card class="ion-no-margin" [ngStyle]="{'height': '100%'}" (tap)="toDetail(item.uuid)">
+          <ion-card-header [ngStyle]="{'padding-bottom': '5px'}">
+            <img src="{{ item.attribute_values && item.attribute_values.logo ? item.attribute_values.logo : 'assets/images/NoImage.png' }}">
+            <ion-card-subtitle>{{ item.label }}</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p>
+              <ion-text color="{{ item.rating_average ? 'warning' : 'medium' }}">
+                <ion-icon name="star" *ngFor="let item of createRange(item.rating_average ? item.rating_average : 5)" [ngStyle]="{'position': 'relative', 'top': '2px'}"></ion-icon>
+              </ion-text>
+
+              <ion-text color="medium" [ngStyle]="{'font-size': '12px'}">
+                {{ item.rating_average ? (item.rating_average | number:'1.0-2') : 0 }} / {{ item.rating_count }}
+                suara
+              </ion-text>
+            </p>
+
+            <p>
+              <ion-text color="danger">
+                <ion-icon name="flag" [ngStyle]="{'position': 'relative', 'top': '2px'}"></ion-icon>
+              </ion-text>
+
+              <ion-text color="medium" [ngStyle]="{'font-size': '12px'}">
+                {{ item.protest_count }}
+                Sanggahan
+              </ion-text>
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="loadNextData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Memuat media lain...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</section>
+
+<ion-text *ngIf="!isLoadingInit && medias && medias.count === 0">
+  <p>Tidak ditemukan.</p>
+</ion-text>

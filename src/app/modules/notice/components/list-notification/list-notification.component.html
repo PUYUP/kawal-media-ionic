@@ -1,0 +1,35 @@
+<ion-spinner *ngIf="isLoadingInit"></ion-spinner>
+
+<ion-list *ngIf="!isLoadingInit && notifications && notifications.count > 0">
+  <ion-item *ngFor="let item of listNotifications; let lst = last;" lines="{{ lst ? 'none' : '' }}" class="ion-no-padding">
+    <ion-label class="ion-text-wrap" (tap)="toDetail(item)">
+      {{ item.date_created | date: 'short' }}: 
+      <strong>
+        {{ item.actor }}
+        {{ item.verb_label }}
+      </strong>
+      
+      {{ item.content }}
+      <strong>di</strong>
+      {{ item.content_notified }}
+    </ion-label>
+
+    <ion-button *ngIf="!item.unread" type="button" color="danger" (tap)="deleteItem(item)" slot="end">
+      <ion-icon name="trash"></ion-icon>
+    </ion-button>
+
+    <ion-icon *ngIf="item.unread" name="checkmark" color="medium" slot="start"></ion-icon>
+    <ion-icon *ngIf="!item.unread" name="done-all" color="success" slot="start"></ion-icon>
+  </ion-item>
+</ion-list>
+
+<ion-infinite-scroll *ngIf="notifications && notifications.count > 0" threshold="100px" (ionInfinite)="loadNextData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Memuat notifikasi lain...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+<p *ngIf="notifications && notifications.count == 0">
+  Belum ada notifikasi.
+</p>

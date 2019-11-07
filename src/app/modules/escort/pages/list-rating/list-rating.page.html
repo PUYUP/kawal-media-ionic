@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="['/media', (mediaData ? mediaData.uuid : '')]"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{ (isLoading ? 'Memuat...' : (mediaData && mediaData.label ? 'Rating ' + mediaData.label : 'Tidak Ditemukan')) }}</ion-title>
+ 
+    <ion-buttons *ngIf="!isLoading" slot="end">
+      <ion-button (tap)="refreshPage()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-component-list-rating (mediaDataOutput)="getMediaData($event)"></app-component-list-rating>
+</ion-content>

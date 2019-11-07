@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  appName: 'Kawal Media',
+  production: true,
+  host: 'https://puyup-app.appspot.com'
 };

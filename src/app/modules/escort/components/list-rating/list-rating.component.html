@@ -1,0 +1,78 @@
+<section *ngIf="!isLoadingInit && ratings && ratings.my_rating" class="ion-padding" [ngStyle]="{'background-color': '#f4f5f8'}">
+  <ion-item class="ion-no-padding ion-no-margin-bottom" lines="none" color="light">
+    <ion-avatar slot="start" [ngStyle]="{'margin-top': '16px', 'margin-bottom': 'auto'}">
+      <img src="{{ ratings.my_rating.avatar ?ratings.my_rating.avatar : 'assets/images/NoImage.png' }}">
+    </ion-avatar>
+
+    <ion-label class="ion-text-wrap">
+      <ion-text>
+        <h3>
+          <strong>{{ ratings.my_rating.rater }}</strong>
+          <ion-text class="ion-float-right" color="medium">
+            <small>{{ ratings.my_rating.date_updated | date: 'short' }}</small>
+          </ion-text>
+        </h3>
+      </ion-text>
+
+      <ion-text color="warning">
+        <p><ion-icon name="star" *ngFor="let item of createRange(ratings.my_rating.score)"></ion-icon></p>
+      </ion-text>
+
+      <ion-text *ngIf="ratings.my_rating.description" color="dark">
+        <p>
+          {{ ratings.my_rating.description }}
+        </p>
+      </ion-text>
+
+      <p>
+        <ion-button mode="ios" size="small" (tap)="sendRating()">Rubah Rating Saya</ion-button>
+      </p>
+    </ion-label>
+  </ion-item>
+</section>
+
+<section class="ion-padding">
+  <ion-spinner *ngIf="isLoadingInit"></ion-spinner>
+
+  <section *ngIf="!isLoadingInit && ratings && ratings.count > 0">
+    <ion-list>
+      <ion-item *ngFor="let item of listRatings; let lst = last;" class="ion-no-padding" lines="{{ lst ? 'none' : '' }}">
+        <ion-avatar slot="start" [ngStyle]="{'margin-top': '16px', 'margin-bottom': 'auto'}">
+          <img src="{{ item.avatar ? item.avatar : 'assets/images/NoImage.png' }}">
+        </ion-avatar>
+
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h3>
+              <strong>{{ item.rater }}</strong>
+              <ion-text class="ion-float-right" color="medium">
+                <small>{{ item.date_updated | date: 'short' }}</small>
+              </ion-text>
+            </h3>
+          </ion-text>
+
+          <ion-text color="warning">
+            <p><ion-icon name="star" *ngFor="let item of createRange(item.score)"></ion-icon></p>
+          </ion-text>
+
+          <ion-text *ngIf="item.description" color="dark">
+            <p>
+              {{ item.description }}
+            </p>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="loadNextData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Memuat rating lain...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </section>
+
+  <ion-text *ngIf="!isLoadingInit && ratings && ratings.count === 0 && !ratings.my_rating">
+    <p>Tidak ditemukan.</p>
+  </ion-text>
+</section>

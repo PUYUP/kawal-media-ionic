@@ -1,0 +1,9 @@
+<ion-spinner *ngIf="isLoadingInit"></ion-spinner>
+
+<ion-list *ngIf="articles && articles.count > 0">
+  <ion-item *ngFor="let item of listArticles; let lst = last;" lines="{{ lst ? 'none' : '' }}" class="ion-no-padding" (tap)="toDetail(item.uuid)">
+    <ion-label class="ion-text-wrap">
+      {{ item.label }}
+    </ion-label>
+  </ion-item>
+</ion-list>

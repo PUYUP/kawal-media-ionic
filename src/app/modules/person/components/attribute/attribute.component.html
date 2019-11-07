@@ -1,0 +1,67 @@
+<div *ngIf="initLoading" fxLayout="row" fxLayoutAlign="start center">
+    <ion-spinner fxFlexOffset="10px"></ion-spinner>
+</div>
+
+<div *ngIf="!initLoading && attributes" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="100%">
+        <app-pickup action="upload_avatar" [personData]="personData" [avatarObj]="avatarObj"></app-pickup>
+
+        <form [formGroup]="createFormGroup" (ngSubmit)="onSubmit()">
+            <ion-list>
+                <ion-item *ngFor="let item of attributes; let lst = last" class="ion-no-padding" lines="{{ lst ? 'none' : '' }}">
+                    <ion-label *ngIf="item.field_type !== 'multi_option'" position="floating">{{ item.label }}</ion-label>
+
+                    <ion-input
+                      *ngIf="item.field_type === 'text'"
+                      value="{{ item.value.object }}"
+                      formControlName="{{ item.identifier }}"
+                      required="{{ item.required }}"
+                      placeholder="{{ item.placeholder }}">
+                    </ion-input>
+
+                    <ion-textarea *ngIf="item.field_type === 'richtext'"
+                        formControlName="{{ item.identifier }}"
+                        value="{{ item.value.object }}"
+                        required="{{ item.required }}"
+                        placeholder="{{ item.placeholder }}"
+                        auto-grow="true"
+                        rows="3"></ion-textarea>
+
+                    <ion-select
+                      *ngIf="item.field_type === 'option'"
+                      [(value)]="item.value.object" 
+                      formControlName="{{ item.identifier }}"
+                      placeholder="Select option">
+                      <ion-select-option *ngFor="let value of item.option_group" [value]="value.id">{{ value.option }}</ion-select-option>
+                    </ion-select>
+                  
+                    <ion-list *ngIf="item.field_type === 'multi_option'" [ngStyle]="{'width': '100%'}" lines="none">
+                      <ion-item-divider class="ion-no-padding">
+                        <ion-label>
+                          {{ item.label }}
+                        </ion-label>
+                      </ion-item-divider>
+
+                      <ion-item *ngFor="let form of createFormGroup.controls[item.identifier].controls; let i=index;" class="ion-no-padding">
+                        <ion-label>{{ item.option_group[i].option }}</ion-label>
+                        <ion-checkbox
+                          slot="start"
+                          [formControl]="form"></ion-checkbox>
+                      </ion-item>
+                    </ion-list>
+                </ion-item>
+            </ion-list>
+      
+            <ion-button
+              [disabled]="createFormGroup.invalid || isLoading" 
+              type="submit"
+              mode="ios" 
+              expand="block"
+              color="primary"
+              class="ion-margin-top">
+                <ion-spinner *ngIf="isLoading" name="dots" class="ion-margin-end"></ion-spinner>
+                {{ isLoading ? 'Menyimpan...' : 'Simpan Profil' }}
+            </ion-button>
+        </form>
+    </div>
+</div>

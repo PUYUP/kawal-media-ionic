@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="media"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{ isLoading ? 'Memuat...' : (mediaData ? mediaData.label : 'Akses ditolak') }}</ion-title>
+
+    <ion-text *ngIf="!isLoading && mediaData && mediaData.ownership" slot="end" class="ion-margin-end ion-text-upperprotest">
+      <small>{{ mediaData.status_label }}</small>
+    </ion-text>
+
+    <ion-buttons *ngIf="!isLoading" slot="end">
+      <ion-button (tap)="refreshPage()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+
+      <ion-button *ngIf="!isLoading && mediaData && mediaData.ownership" (tap)="actionSheetOpen()">
+        <ion-icon slot="icon-only" name="more"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <app-component-detail-media [mediaData]="mediaData" [personData]="personData" [attributeData]="attributeData"></app-component-detail-media>
+</ion-content>

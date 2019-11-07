@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button *ngIf="!media_uuid"></ion-menu-button>
+      <ion-back-button *ngIf="media_uuid" [defaultHref]="['/media', media_uuid]"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title *ngIf="media_uuid">
+      {{ isLoading ? 'Memuat...' : mediaData ? 'Sanggahan ' + mediaData.label : 'Akses ditolak' }}
+    </ion-title>
+
+    <ion-title *ngIf="!media_uuid">
+      Sanggahan
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (tap)="refreshPage()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-bottom">
+  <section *ngIf="media_uuid" class="ion-padding">
+    <app-component-list-protest [media_uuid]="media_uuid"></app-component-list-protest>
+  </section>
+
+  <ion-segment *ngIf="!media_uuid && personData" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="public" checked="{{ segment === 'public' ? 'true' : 'false' }}" [ngStyle]="{'width': '50%'}">
+      <ion-label>Publik</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="private" checked="{{ segment === 'private' ? 'true' : 'false' }}" [ngStyle]="{'width': '50%'}">
+      <ion-label>Milik Saya</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <section *ngIf="!media_uuid" class="ion-padding">
+    <app-component-list-protest *ngIf="segment === 'public'" scope="public" [personData]="personData"></app-component-list-protest>
+    <app-component-list-protest *ngIf="segment === 'private' && personData" scope="private" [personData]="personData"></app-component-list-protest>
+  </section>
+</ion-content>

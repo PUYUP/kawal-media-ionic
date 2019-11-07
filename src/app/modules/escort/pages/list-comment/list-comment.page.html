@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="['/media', media_uuid, 'protest', protest_uuid]"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{ protestData && protestData.label ? 'Komentar ' + protestData.label : 'Memuat...' }}</ion-title>
+ 
+    <ion-buttons slot="end">
+      <ion-button (tap)="refreshPage()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <app-component-list-comment (mediaProtestUUIDOutput)="getMediaProtestUUID($event)" (protestDataOutput)="getProtestData($event)" [depth]="0"></app-component-list-comment>
+</ion-content>

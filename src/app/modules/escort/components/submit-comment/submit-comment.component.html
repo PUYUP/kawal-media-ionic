@@ -1,0 +1,42 @@
+<ion-header *ngIf="!inListComment">
+  <ion-toolbar>
+    <ion-title>Komentari</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (tap)="dismiss()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Batal
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ng-template #formComment>
+  <form [formGroup]="createFormGroup" (ngSubmit)="onSubmit()">
+    <ion-item class="ion-no-padding" lines="none">
+      <ion-label position="floating">Ketik Komentar Anda</ion-label>
+
+      <ion-textarea
+        auto-grow="true"
+        formControlName="description"
+        placeholder="Komentar..."
+        rows="3"
+        minlength="10"
+        (ionInputDidLoad)="textareaLoaded($event)"
+        [ngStyle]="{'min-height': '100px'}"></ion-textarea>
+    </ion-item>
+
+    <ion-button type="submit" [disabled]="createFormGroup.invalid || isSubmitLoading" mode="ios" expand="block">
+      <ion-spinner *ngIf="isSubmitLoading" color="light" name="dots" class="ion-margin-end"></ion-spinner>
+      {{ isSubmitLoading ? 'Memproses...' : commentDataInit ? 'Simpan Komentar' : 'Kirim Komentar' }}
+    </ion-button>
+  </form>
+</ng-template>
+
+<ion-content *ngIf="!inListComment" class="ion-padding">
+  <ng-container *ngTemplateOutlet="formComment"></ng-container>
+</ion-content>
+
+<section *ngIf="inListComment">
+  <ng-container *ngTemplateOutlet="formComment"></ng-container>
+</section>

@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Rating {{ mediaData.label }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (tap)="dismiss()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Batal
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form *ngIf="mediaData" [formGroup]="createFormGroup">
+    <div fxLayout="row" fxLayoutAlign="center center" class="ion-margin-top ion-margin-bottom">
+      <div fxFlex="100%">
+        <ionic4-star-rating
+          activeIcon="md-star"
+          defaultIcon="md-star"
+          activeColor="#FDCC0D" 
+          defaultColor="#e5e5e5"
+          readonly="false"
+          rating="0"
+          fontSize="50px"
+          formControlName="score"
+          class="ion-text-center">
+        </ionic4-star-rating>
+      </div>
+    </div>
+
+    <ion-item class="ion-no-padding">
+      <ion-textarea
+        auto-grow="true"
+        formControlName="description"
+        placeholder="Komentar..."
+        rows="3"
+        (ionInputDidLoad)="textareaLoaded($event)"
+        [ngStyle]="{'min-height': '100px'}"></ion-textarea>
+    </ion-item>
+
+    <ion-button 
+        class="ion-margin-top"
+        [disabled]="createFormGroup.invalid || isLoading"
+        mode="ios"
+        expand="block"
+        color="primary"
+        (tap)="formSubmit()">
+          <ion-spinner *ngIf="isLoading" color="light" name="dots" class="ion-margin-end"></ion-spinner>
+          Kirim Rating
+      </ion-button>
+  </form>
+</ion-content>

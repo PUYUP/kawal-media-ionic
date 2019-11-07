@@ -1,0 +1,57 @@
+<ion-spinner *ngIf="isLoadingInit"></ion-spinner>
+
+<ion-item *ngIf="scope === 'private' && personData && !isLoadingInit" class="ion-no-padding">
+  <ion-label>Pilih Status</ion-label>
+  <ion-select placeholder="Status"
+    class="ion-no-padding" 
+    interface="action-sheet"
+    [ngStyle]="{'width': '100%', 'max-width': 'none'}" 
+    (ionChange)="statusChange($event)"
+    value="{{ statusValue }}"
+    okText="Filter">
+    <ion-select-option *ngFor="let s of status" value="{{ s.status }}">
+      {{ s.label }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+
+<div *ngIf="!isLoadingInit && protests && protests.count > 0">
+  <ion-list>
+    <ion-item *ngFor="let item of listProtests; let lst = last;" class="ion-no-padding" lines="{{ lst ? 'none' : '' }}" (tap)="toDetailProtest(item.uuid, item.media)">
+      <ion-avatar slot="start" [ngStyle]="{'margin-top': '16px', 'margin-bottom': 'auto'}">
+        <img src="{{ item.avatar ? item.avatar : 'assets/images/NoImage.png' }}">
+      </ion-avatar>
+
+      <ion-label class="ion-text-wrap">
+        <ion-text *ngIf="item.label">
+          <h3>
+            <strong class="ion-text-capitalize">{{ item.label }}</strong>
+            <ion-text class="ion-float-right" color="medium">
+              <small>{{ item.date_updated | date: 'short' }}</small>
+            </ion-text>
+          </h3>
+        </ion-text>
+
+        <ion-text color="dark">
+          <p>
+            oleh: {{ item.protester }} <br />
+            <span [ngStyle]="{'margin-top': '-2px', 'display': 'block'}">
+              media: {{ item.media_label }}
+            </span>
+          </p>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadNextData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Memuat sanggahan lain...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</div>
+
+<ion-text *ngIf="!isLoadingInit && protests && protests.count === 0">
+  <p>Tidak ditemukan.</p>
+</ion-text>

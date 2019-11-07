@@ -1,0 +1,32 @@
+<section *ngIf="commentData">
+  <ion-item class="ion-no-padding" lines="none">
+    <ion-avatar slot="start">
+      <img src="{{ commentData.avatar ? commentData.avatar : 'assets/images/NoImage.png' }}">
+    </ion-avatar>
+
+    <ion-label class="ion-text-wrap">
+      <ion-text>
+        <h3>
+          <strong class="ion-text-capitalize">{{ commentData.commenter }}</strong>
+        </h3>
+
+        <p>
+          <ion-text color="medium">
+            <small>{{ commentData.date_updated | date: 'short' }}</small>
+          </ion-text>
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+
+  <ion-text color="dark">
+    {{ commentData.description }}
+  </ion-text>
+
+  <p>
+    <ion-button *ngIf="commentData.ownership" slot="end" type="button" size="small" (tap)="deleteItem(commentData)" color="light" class="ion-margin-end">Hapus</ion-button>
+    <ion-button *ngIf="commentData.ownership" slot="end" type="button" size="small" (tap)="editItem(commentData)">Sunting</ion-button>
+  </p>
+</section>
+
+<ion-item-divider></ion-item-divider>

@@ -1,0 +1,43 @@
+<div *ngIf="basicLoading" fxLayout="row" fxLayoutAlign="start center">
+    <ion-spinner fxFlexOffset="10px"></ion-spinner>
+</div>
+
+<ion-list *ngIf="!basicLoading && basicProfiles">
+    <ion-item *ngFor="let item of profileData; let i = index; let lst = last" class="ion-no-padding" lines="{{ lst ? 'none' : '' }}" class="ion-no-padding">
+        <ion-label position="floating">{{ item.label | titlecase }}</ion-label>
+        <ion-input 
+          #basicInput 
+          #basicInputValidator="ngModel" 
+          type="{{ item.field_type }}" 
+          name="{{ item.identifier }}" 
+          placeholder="{{ item.label }}" 
+          disabled="{{ indexEdited != i }}" 
+          [(ngModel)]="editValue[i]">
+        </ion-input>
+
+        <ion-note slot="end" class="ion-no-padding">
+            <div *ngIf="indexEdited == i" fxLayout="row">
+                <ion-button
+                    *ngIf="!isSaveLoading" 
+                    [disabled]="isSaveLoading || !basicInputValidator.valid" 
+                    color="success"
+                    size="small"
+                    (tap)="saveBasic($event, item, i)">
+                    <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+                </ion-button>
+
+                <ion-spinner *ngIf="isSaveLoading" [ngStyle]="{'margin-top': '2px', 'margin-right': '5px'}"></ion-spinner>
+
+                <ion-button (tap)="editCancel($event, item, i)" color="danger" size="small">
+                    <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+            </div>
+
+            <div *ngIf="indexEdited != i" fxLayout="row">
+                <ion-button (tap)="editBasic($event, item, i)" color="light" size="small">
+                    <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-button>
+            </div>
+        </ion-note>
+    </ion-item>
+</ion-list>

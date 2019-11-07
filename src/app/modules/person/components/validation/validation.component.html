@@ -1,0 +1,49 @@
+<div *ngIf="initLoading" fxLayout="row" fxLayoutAlign="start center">
+    <ion-spinner fxFlexOffset="10px"></ion-spinner>
+</div>
+
+<section *ngIf="!initLoading && validationData">
+  <p>Kami ingin semua kontributor adalah orang betulan. Buktikan Anda bukan <i>bot, spammer</i> atau jenis akun merugikan lainnya dengan memvalidasi data berikut ini.</p>
+
+  <ion-list>
+      <ion-item *ngFor="let item of validationData; let lst = last" class="ion-no-padding" lines="{{ lst ? 'none' : '' }}">
+          <ion-icon
+            *ngIf="item.value.fake_verified"
+            name="checkmark-circle"
+            color="success"
+            slot="start"
+            [ngStyle]="{'margin-right': '10px'}"></ion-icon>
+          
+          <ion-icon
+            *ngIf="!item.value.fake_verified"
+            name="clock"
+            color="medium"
+            slot="start"
+            [ngStyle]="{'margin-right': '10px'}"></ion-icon>
+
+          <ion-label position="floating">
+            {{ item.label | titlecase }}
+          </ion-label>
+        
+          <ion-input 
+            #basicInput 
+            #basicInputValidator="ngModel" 
+            type="text" 
+            name="{{ item.identifier }}" 
+            placeholder="{{ item.placeholder }}"
+            [(ngModel)]="attributeValue[item.identifier]"
+            (keyup)="valueTyping($event, item.identifier, basicInput.value)">
+          </ion-input>
+
+          <ion-note slot="end" class="ion-no-padding">
+            <ion-button
+                color="{{ item.value.fake_verified ? 'light' : 'primary' }}"
+                size="small"
+                disabled="{{ item.value.fake_verified ? true : false }}"
+                (tap)="requestValidation(item)">
+                <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+            </ion-button>
+          </ion-note>
+      </ion-item>
+  </ion-list>
+</section>

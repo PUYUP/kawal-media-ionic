@@ -1,0 +1,75 @@
+<section #commentForm>
+  <div *ngIf="isReplyTo && replyToData">
+    Balas ke
+    <ion-chip>
+      <ion-avatar>
+        <img src="{{ replyToData.avatar ? replyToData.avatar : 'assets/images/NoImage.png' }}">
+      </ion-avatar>
+
+      <ion-label>{{ replyToData.commenter }}</ion-label>
+    </ion-chip>
+
+    <ion-button size="small" (tap)="cancelReplyTo()" color="light" slot="icon-ony" class="ion-float-right" mode="ios">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+  </div>
+
+  <app-component-submit-comment [protestData]="protestData" [inListComment]="true"></app-component-submit-comment>
+</section>
+
+<ion-spinner *ngIf="isLoadingInit"></ion-spinner>
+
+<div *ngIf="!isLoadingInit && comments && comments.count > 0">
+  <ion-item-divider></ion-item-divider>
+
+  <ion-list>
+    <ion-item *ngFor="let item of listComments; let lst = last;" class="ion-no-padding" lines="{{ lst ? 'none' : '' }}" id="{{ item.uuid }}" color="{{ item.uuid == notified_uuid ? 'light' : '' }}">
+      <ion-avatar slot="start" [ngStyle]="{'margin-top': '16px', 'margin-bottom': 'auto'}">
+        <img src="{{ item.avatar ? item.avatar : 'assets/images/NoImage.png' }}">
+      </ion-avatar>
+
+      <ion-label class="ion-text-wrap">
+        <ion-text>
+          <h3>
+            <strong class="ion-text-capitalize">{{ item.commenter }}</strong>
+            <ion-text class="ion-float-right" color="medium">
+              <small>{{ item.date_updated | date: 'short' }}</small>
+            </ion-text>
+          </h3>
+        </ion-text>
+
+        <ion-text color="dark">
+          <p *ngIf="item.reply_to_comment && item.reply_for_person" class="ion-no-margin">
+            <ion-chip>
+              <ion-icon name="return-right"></ion-icon> balasan ke <strong> &nbsp;{{ item.reply_for_person_name }}</strong>
+            </ion-chip>
+          </p>
+
+          {{ item.description }}
+        </ion-text>
+
+        <p>
+          <ion-button *ngIf="!item.ownership && item.reply_count == 0 && !item.parent" type="button" size="small" (tap)="replyItem(item)" color="light" class="ion-margin-end">
+            Balas
+          </ion-button>
+
+          <ion-button *ngIf="item.reply_count > 0" type="button" size="small" (tap)="replyItem(item)" color="light" class="ion-margin-end">
+            {{ item.reply_count + ' Balasan' }}
+          </ion-button>
+
+          <ion-button *ngIf="item.parent && !item.ownership" color="light" (tap)="replyTo(item)" class="ion-margin-end" >Balas</ion-button>
+
+          <ion-button *ngIf="item.ownership" type="button" size="small" (tap)="deleteItem(item)" color="light" class="ion-margin-end">Hapus</ion-button>
+          <ion-button *ngIf="item.ownership" type="button" size="small" (tap)="editItem(item)">Sunting</ion-button>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Memuat komentar lain...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</div>

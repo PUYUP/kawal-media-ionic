@@ -3,16 +3,28 @@
     <ion-menu type="overlay">
       <ion-header>
         <ion-toolbar>
-          <ion-title>Menu</ion-title>
+          <ion-title>{{ personData && personData.username ? 'Halo ' + personData.username : 'Navigasi' }}</ion-title>
         </ion-toolbar>
       </ion-header>
+
       <ion-content>
-        <ion-list>
+        <ion-list lines="none">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+            <ion-item *ngIf="p.restrict === false && p.url !== '/logout'" [routerDirection]="'root'" [routerLink]="[p.url]">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
               <ion-label>
-                {{p.title}}
+                {{ p.title }}
+              </ion-label>
+
+              <ion-badge *ngIf="isLogged && p.url === '/notification' && notificationCount > 0" slot="end" color="medium">
+                {{ notificationCount }}
+              </ion-badge>
+            </ion-item>
+
+            <ion-item *ngIf="p.restrict === false && p.url === '/logout'" [routerDirection]="'root'" routerLink="/home" (tap)="logout()">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{ p.title }}
               </ion-label>
             </ion-item>
           </ion-menu-toggle>

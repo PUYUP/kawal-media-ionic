@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sunting {{ attributeData ? attributeData.label : '' }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (tap)="dismiss()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Batal
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form *ngIf="attributeData" [formGroup]="createFormGroup" (ngSubmit)="onSubmit()">
+    <ion-item class="ion-no-padding">
+      <ion-textarea
+        auto-grow="true"
+        formControlName="value"
+        placeholder="{{ attributeData ? attributeData.label : '' }}..."
+        rows="3"
+        (ionInputDidLoad)="textareaLoaded($event)"
+        [ngStyle]="{'min-height': '100px'}"></ion-textarea>
+    </ion-item>
+
+    <ion-button 
+      type="submit"
+      class="ion-margin-top"
+      [disabled]="createFormGroup.invalid || isLoading"
+      mode="ios"
+      expand="block"
+      color="primary">
+        <ion-spinner *ngIf="isLoading" color="light" name="dots" class="ion-margin-end"></ion-spinner>
+        Simpan
+    </ion-button>
+  </form>
+</ion-content>

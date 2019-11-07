@@ -1,0 +1,117 @@
+<div *ngIf="mediaData">
+    <section>
+        <app-pickup action="upload_logo" [mediaData]="mediaData" [personData]="personData"></app-pickup>
+
+        <div *ngIf="mediaData.status === 3">
+          <ionic4-star-rating
+            class="ion-text-center"
+            activeIcon="md-star"
+            defaultIcon="md-star"
+            halfIcon="md-star-half"
+            activeColor="#FDCC0D" 
+            defaultColor="#e5e5e5"
+            readonly="true"
+            halfStar="true"
+            rating="{{ mediaData.ratings.score_avg ? mediaData.ratings.score_avg : 0 }}"
+            fontSize="30px">
+          </ionic4-star-rating>
+
+          <p class="ion-text-center ion-no-margin">
+            <ion-text>
+              <small>
+                <strong>{{ mediaData.ratings.score_avg ? (mediaData.ratings.score_avg | number:'1.0-2') : 0 }}</strong> 
+                dari {{ mediaData.rating_count }} suara
+              </small>
+            </ion-text>
+          </p>
+        </div>
+    </section>
+
+    <section>
+      <aside *ngIf="attributeData">
+        <ion-list>
+          <ion-item *ngFor="let item of attributeData; let lst = last;" class="ion-no-padding" lines="{{ lst ? 'none': '' }}">
+            <ion-label position="floating" color="medium">
+              <small>{{ item.label }}</small>
+            </ion-label>
+
+            <p *ngIf="item.value.object" [innerHTML]="item.value.object" [ngStyle]="{'padding-top': '10px'}"></p>
+            <p *ngIf="!item.value.object">&mdash;</p>
+
+            <ion-button *ngIf="mediaData.ownership" (tap)="editAttribute(item)" type="button" color="light" class="ion-no-margin {{ lst ? '' : 'ion-margin-bottom' }}">
+              Sunting
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </aside>
+
+      <ion-list *ngIf="mediaData.status === 3">
+        <ion-item-divider class="ion-no-padding">
+          <ion-label>Semua Rating</ion-label>
+        </ion-item-divider>
+
+        <ion-item class="ion-no-padding">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col class="ion-no-padding">
+                <ion-button expand="block" mode="md" color="light" class="ion-margin-end" (tap)="sendRating()">
+                  <ion-icon name="add" slot="start"></ion-icon>
+                  Rating
+                </ion-button>
+              </ion-col>
+
+              <ion-col class="ion-no-padding">
+                <ion-button expand="block" mode="md" color="light" class="ion-margin-start" [routerDirection]="'forward'" [routerLink]="['/media', mediaData.uuid, 'rating']" [state]="{mediaData: mediaData}">
+                  Lihat
+                  <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+        <ion-item *ngFor="let rating of ratingsLoop; let i = index; let lst = last;" lines="{{ lst ? 'none': '' }}" class="ion-no-padding">
+          <ionic4-star-rating
+            activeIcon="md-star"
+            defaultIcon="md-star"
+            activeColor="#FDCC0D" 
+            defaultColor="#e5e5e5"
+            readonly="true"
+            rating="{{ rating }}"
+            fontSize="25px">
+          </ionic4-star-rating>
+
+          <ion-note slot="end">
+            <strong>{{ mediaData.ratings[i+1] }}</strong>
+            suara
+          </ion-note>
+        </ion-item>
+
+        <ion-item-divider>
+          <ion-label>Sanggahan Terupdate</ion-label>
+        </ion-item-divider>
+
+        <ion-item class="ion-no-padding">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col class="ion-no-padding">
+                <ion-button expand="block" mode="md" color="light" class="ion-margin-end" [routerDirection]="'forward'" [routerLink]="['/media', mediaData.uuid, 'protest', 'submit']" [state]="{mediaData: mediaData}">
+                  Sanggahan
+                  <ion-icon name="add" slot="start"></ion-icon>
+                </ion-button>
+              </ion-col>
+
+              <ion-col class="ion-no-padding">
+                <ion-button expand="block" mode="md" color="light" class="ion-margin-start" [routerDirection]="'forward'" [routerLink]="['/media', mediaData.uuid, 'protest']" [state]="{mediaData: mediaData}">
+                  Lihat
+                  <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+
+      <app-component-list-protest *ngIf="mediaData.status === 3" scope="public" [media_uuid]="mediaData.uuid" limit="5"></app-component-list-protest>
+    </section>
+</div>

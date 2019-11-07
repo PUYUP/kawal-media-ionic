@@ -1,0 +1,43 @@
+<ion-spinner *ngIf="isLoading"></ion-spinner>
+
+<p *ngIf="!isLoading && !isShowEditor">
+  <ion-text color="danger">Anda tidak izinkan akses laman ini.</ion-text>
+</p>
+
+<form *ngIf="!isLoading && isShowEditor" [formGroup]="createFormGroup" (ngSubmit)="onSubmit()">
+  <ion-list>
+    <ion-item class="ion-no-padding">
+      <ion-label position="floating">Judul</ion-label>
+      <ion-input type="text" formControlName="label" required="true"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-no-padding">
+      <ion-label position="floating">Tujuan Sanggahan</ion-label>
+      <ion-select
+          formControlName="purpose"
+          required="true"
+          placeholder="Select option">
+          <ion-select-option *ngFor="let value of purpose" [value]="value.id">{{ value.label }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item-divider class="ion-no-padding" [ngStyle]="{'border': '0px'}">Keterangan Lengkap</ion-item-divider>
+    
+    <div [ngStyle]="{'padding-top': '7.5px'}">
+      <ckeditor
+        *ngIf="classicEditor" 
+        formControlName="description"
+        [editor]="classicEditor" 
+        [config]="configEditor"
+        (ready)="onReady($event)"></ckeditor>
+    </div>
+  </ion-list>
+
+  <ion-button type="submit"
+    expand="block"
+    mode="ios"
+    [disabled]="createFormGroup.invalid && !isSubmitLoading">
+      <ion-spinner *ngIf="isSubmitLoading" color="light" name="dots" class="ion-margin-end"></ion-spinner>
+      {{ ( isSubmitLoading ? 'Memproses...' : ( protest_uuid ? 'Simpan Sanggahan' : 'Kirim Sanggahan' ) ) }}
+    </ion-button>
+</form>

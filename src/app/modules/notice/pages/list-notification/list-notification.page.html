@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Notifikasi</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (tap)="deleteAlls()">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+
+      <ion-button (tap)="markReads()">
+        <ion-icon slot="icon-only" name="done-all"></ion-icon>
+      </ion-button>
+
+      <ion-button (tap)="refreshPage()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <app-component-list-notification></app-component-list-notification>
+</ion-content>

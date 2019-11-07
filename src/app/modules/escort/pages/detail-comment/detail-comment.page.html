@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="['/media', media_uuid, 'protest', protest_uuid, 'comment']"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Balasan</ion-title>
+ 
+    <ion-buttons slot="end">
+      <ion-button (tap)="refreshPage()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <app-component-detail-comment></app-component-detail-comment>
+  <app-component-list-comment [depth]="1"></app-component-list-comment>
+</ion-content>

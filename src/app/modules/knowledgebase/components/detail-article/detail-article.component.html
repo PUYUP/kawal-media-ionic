@@ -1,0 +1,6 @@
+<ion-spinner *ngIf="isLoading"></ion-spinner>
+
+<article *ngIf="articleData">
+  <h4 class="ion-no-padding">{{ articleData.label }}</h4>
+  <div [innerHTML]="content"></div>
+</article>

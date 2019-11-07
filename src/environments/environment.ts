@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  appName: 'Kawal Media',
+  production: true,
+  host: 'https://puyup-app.appspot.com'
 };
 
 /*
